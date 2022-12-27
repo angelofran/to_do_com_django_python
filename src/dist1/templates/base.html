@@ -1,0 +1,82 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/home/">To Do</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/home/">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link active"  href="#">Como usar?</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Ajuda</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                  <a class="nav-link" href="/accounts/login">Entrar</a>
+              </li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts/logout">Sair</a>
+                </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="row">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <footer>
+      <p>To Do, suas tarefas.</p>
+  </footer>
+  <script>
+    $(document).ready(function () {
+      let baseUrl = 'http://127.0.0.1:8000/home/';
+      let deleteBTN = $('.delete-btn');
+      let searchbtn = $('#search-btn');
+      let searchf = $('#search-form');
+      var filter = $('#filter');
+      $(deleteBTN).on('click', function (e) {
+          e.preventDefault();
+          let dellink = $(this).attr('href');
+          let result = confirm('Quer deletar a tarefa?');
+          if(result) {
+            window.location.href = dellink
+          }
+      });
+      $(searchbtn).on('click', function() {
+          searchf.submit();
+      });
+      $(filter).change(function() {
+          filter = $(this).val();
+          window.location.href = baseUrl + '?filter=' + filter
+      });
+    });
+
+  </script>
+</body>
+</html>
